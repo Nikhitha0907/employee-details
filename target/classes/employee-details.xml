@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd"></mule>
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="88fcf13e-3aed-4052-bd78-af7f52f843aa" >
+		<http:listener-connection host="0.0.0.0" port="8080" />
+	</http:listener-config>
+	<flow name="employee-detailsFlow" doc:id="9a060906-f8b8-4e2d-807d-779ee52d51d6" >
+		<http:listener doc:name="Listener" doc:id="c2fcaf3d-4ad1-469f-bde7-275128db478f" config-ref="HTTP_Listener_config" path="/*"/>
+		<ee:transform doc:name="Transform Message" doc:id="6faedd4b-5255-4e5c-a274-267a51a38018" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+
+{
+"Employee Name":payload." Name",
+"Employee PhoneNumber" : payload." PhoneNumber",
+"Employee Gender" : payload." Gender"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
